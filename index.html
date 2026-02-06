@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Happy Birthday Dad 🎂</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@300;500&display=swap');
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body { 
+      overflow: hidden; 
+      font-family: 'Montserrat', sans-serif;
+      cursor: grab;
+      background: radial-gradient(circle at 50% 50%, #fff5e6 0%, #ffe0b3 50%, #ffd699 100%);
+    }
+    
+    body:active {
+      cursor: grabbing;
+    }
+    
+    canvas { 
+      display: block;
+      touch-action: none;
+    }
+    
+    #ui-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 100;
+    }
+    
+    
+    #title {
+      position: absolute;
+      top: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      pointer-events: none;
+      animation: fadeInDown 1.5s ease-out 1s backwards;
+    }
+    
+    #title h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 48px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #d4af37 0%, #f4e4c1 50%, #d4af37 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: 0 4px 20px rgba(212, 175, 55, 0.3);
+      margin-bottom: 8px;
+      letter-spacing: 2px;
+    }
+    
+    #title p {
+      font-size: 14px;
+      color: #8b7355;
+      font-weight: 300;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+    
+    #controls {
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(20px);
+      padding: 16px 28px;
+      border-radius: 50px;
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      pointer-events: auto;
+      animation: fadeInUp 1.5s ease-out 1.5s backwards;
+    }
+    
+    #controls button {
+      background: linear-gradient(135deg, #d4af37 0%, #f4e4c1 100%);
+      border: none;
+      padding: 10px 20px;
+      border-radius: 25px;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 500;
+      font-size: 12px;
+      color: #5a4a3a;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    
+    #controls button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+    }
+    
+    #controls button:active {
+      transform: translateY(0);
+    }
+    
+    #controls button.active {
+      background: linear-gradient(135deg, #f4e4c1 0%, #d4af37 100%);
+    }
+    
+    .control-divider {
+      width: 1px;
+      height: 20px;
+      background: rgba(139, 115, 85, 0.3);
+    }
+    
+    .control-label {
+      font-size: 11px;
+      color: #8b7355;
+      font-weight: 300;
+      letter-spacing: 1px;
+    }
+    
+    #intro-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 50% 50%, #fff5e6 0%, #ffe0b3 100%);
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: fadeOut 1s ease-out 3s forwards;
+    }
+    
+    #intro-text {
+      font-family: 'Playfair Display', serif;
+      font-size: 72px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #d4af37 0%, #f4e4c1 50%, #d4af37 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: scaleIn 2s ease-out;
+      text-align: center;
+      line-height: 1.2;
+    }
+    
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+    }
+    
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+    }
+    
+    @keyframes fadeOut {
+      to {
+        opacity: 0;
+        pointer-events: none;
+      }
+    }
+    
+    @keyframes scaleIn {
+      0% {
+        opacity: 0;
+        transform: scale(0.8);
+      }
+      50% {
+        opacity: 1;
+        transform: scale(1.05);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="intro-overlay">
+    <div id="intro-text">Happy Birthday<br>Dad! 🎂</div>
+  </div>
+  
+  <div id="ui-overlay">
+    <div id="title">
+      <h1 style="font-size: 26px;">✨ Happy Birthday Dad! ✨</h1>
+      <p>Drag to Rotate • Scroll to Zoom</p>
+    </div>
+    
+    <div id="controls">
+      <span class="control-label">View:</span>
+      <button id="autoRotateBtn">Auto-Rotate</button>
+      <div class="control-divider"></div>
+      <button id="resetBtn">Reset Camera</button>
+    </div>
+  </div>
+
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+    }
+  }
+  </script>
+
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+    // Scene setup
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0xfff5e6);
+    scene.fog = new THREE.Fog(0xfff5e6, 12, 25);
+
+    // Camera
+    const camera = new THREE.PerspectiveCamera(50, window.innerWidth/window.innerHeight, 0.1, 100);
+    camera.position.set(0, 8, 15);
+
+    // Renderer
+    const renderer = new THREE.WebGLRenderer({antialias: true, alpha: true});
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.2;
+    document.body.appendChild(renderer.domElement);
+
+    // Controls
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+    controls.minDistance = 4;
+    controls.maxDistance = 12;
+    controls.maxPolarAngle = Math.PI / 2.1;
+    controls.target.set(0, 1, 0);
+    controls.autoRotate = false;
+    controls.autoRotateSpeed = 6;
+
+    // Intro cinematic
+    let introActive = true;
+    const targetCameraPos = new THREE.Vector3(0, 2.5, 8);
+    setTimeout(() => { introActive = false; }, 3000);
+
+    // Lights
+    const ambientLight = new THREE.AmbientLight(0xfff4e0, 0.6);
+    scene.add(ambientLight);
+
+    const mainLight = new THREE.DirectionalLight(0xfff5e8, 1.5);
+    mainLight.position.set(8, 12, 6);
+    mainLight.castShadow = true;
+    mainLight.shadow.mapSize.width = 2048;
+    mainLight.shadow.mapSize.height = 2048;
+    mainLight.shadow.camera.near = 0.5;
+    mainLight.shadow.camera.far = 50;
+    scene.add(mainLight);
+
+    const fillLight = new THREE.DirectionalLight(0xffe4b3, 0.8);
+    fillLight.position.set(-5, 6, -4);
+    scene.add(fillLight);
+
+    const rimLight = new THREE.DirectionalLight(0xffd699, 1.2);
+    rimLight.position.set(0, 3, -10);
+    scene.add(rimLight);
+
+    const hemisphereLight = new THREE.HemisphereLight(0xfff8e7, 0xd4a574, 0.5);
+    scene.add(hemisphereLight);
+
+    // Plate
+    const plateMaterial = new THREE.MeshStandardMaterial({color: 0xffffff, metalness: 0.2, roughness: 0.2});
+    const plate = new THREE.Mesh(new THREE.CylinderGeometry(2.3, 2.1, 0.18, 64), plateMaterial);
+    plate.position.y = -0.1;
+    plate.castShadow = true;
+    plate.receiveShadow = true;
+    scene.add(plate);
+
+    const rim = new THREE.Mesh(new THREE.TorusGeometry(2.2, 0.1, 20, 64), plateMaterial);
+    rim.position.y = -0.01;
+    rim.rotation.x = Math.PI / 2;
+    scene.add(rim);
+
+    // Table
+    const tableMaterial = new THREE.MeshStandardMaterial({color: 0xd4a574, roughness: 0.9, metalness: 0.1});
+    const table = new THREE.Mesh(new THREE.CircleGeometry(15, 64), tableMaterial);
+    table.rotation.x = -Math.PI / 2;
+    table.position.y = -0.3;
+    table.receiveShadow = true;
+    scene.add(table);
+
+    // Cake layers
+    const chocolateMaterial = new THREE.MeshStandardMaterial({color: 0x916d4c, roughness: 0.8, metalness: 0.1});
+    const frostingMaterial = new THREE.MeshStandardMaterial({color: 0xfffef7, roughness: 0.3, metalness: 0.15, clearcoat: 0.3, clearcoatRoughness: 0.4});
+
+    const bottomCake = new THREE.Mesh(new THREE.CylinderGeometry(1.6, 1.6, 0.4, 64), chocolateMaterial);
+    bottomCake.position.y = 0.1;
+    bottomCake.castShadow = true;
+    scene.add(bottomCake);
+
+    const frosting1 = new THREE.Mesh(new THREE.CylinderGeometry(1.65, 1.65, 0.35, 64), frostingMaterial);
+    frosting1.position.y = 0.475;
+    frosting1.castShadow = true;
+    scene.add(frosting1);
+
+    const middleCake = new THREE.Mesh(new THREE.CylinderGeometry(1.55, 1.55, 0.35, 64), chocolateMaterial);
+    middleCake.position.y = 0.825;
+    middleCake.castShadow = true;
+    scene.add(middleCake);
+
+    const frosting2 = new THREE.Mesh(new THREE.CylinderGeometry(1.6, 1.6, 0.3, 64), frostingMaterial);
+    frosting2.position.y = 1.15;
+    frosting2.castShadow = true;
+    scene.add(frosting2);
+
+    const topFrosting = new THREE.Mesh(new THREE.CylinderGeometry(1.6, 1.6, 0.15, 64), frostingMaterial);
+    topFrosting.position.y = 1.375;
+    topFrosting.castShadow = true;
+    scene.add(topFrosting);
+
+    // Sprinkles
+    const sprinkleColors = [0xff6b9d, 0x4ecdc4, 0xffe66d, 0x95e1d3, 0xf38181, 0xaa96da, 0xffd89b];
+    for(let i=0;i<1000;i++){
+    const geo = new THREE.CylinderGeometry(0.01,0.01,0.05,8);
+    const mat = new THREE.MeshStandardMaterial({color: sprinkleColors[Math.floor(Math.random()*sprinkleColors.length)], roughness:0.4, metalness:0.6});
+    const sprinkle = new THREE.Mesh(geo, mat);
+    const angle = Math.random()*Math.PI*2;
+    const radius = Math.random()*1.45;
+    sprinkle.position.set(Math.cos(angle)*radius,1.45+Math.random()*0.03,Math.sin(angle)*radius);
+    sprinkle.rotation.set(Math.random()*Math.PI, Math.random()*Math.PI, Math.random()*Math.PI);
+    scene.add(sprinkle);
+    }
+
+    // Peanut Butter Cups
+    const cupPositions = [
+    {x:0, z:0},{x:0.6, z:0},{x:-0.6,z:0},
+    {x:0.3,z:0.5},{x:-0.3,z:0.5},
+    {x:0.3,z:-0.5},{x:-0.3,z:-0.5},
+    ];
+    cupPositions.forEach(pos=>{
+    const wrapper = new THREE.Mesh(new THREE.CylinderGeometry(0.18,0.16,0.12,32),
+                                    new THREE.MeshStandardMaterial({color:0x5d4037, roughness:0.6, metalness:0.2}));
+    wrapper.position.set(pos.x,1.51,pos.z);
+    wrapper.castShadow = true;
+    scene.add(wrapper);
+
+    const pb = new THREE.Mesh(new THREE.CylinderGeometry(0.15,0.15,0.1,32),
+                                new THREE.MeshStandardMaterial({color:0xd4a574, roughness:0.5}));
+    pb.position.set(pos.x,1.51+0.06,pos.z);
+    pb.castShadow = true;
+    scene.add(pb);
+    });
+
+    // Name Card (Tent Style)
+    const cardGroup = new THREE.Group();
+    
+    // Create canvas for text
+    const canvas = document.createElement('canvas');
+    canvas.width = 512;
+    canvas.height = 256;
+    const ctx = canvas.getContext('2d');
+    
+    // Background
+    ctx.fillStyle = '#fffffa';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    // Decorative border
+    ctx.strokeStyle = '#d4af37';
+    ctx.lineWidth = 3;
+    ctx.strokeRect(20, 20, canvas.width - 40, canvas.height - 40);
+    
+    // Title text
+    ctx.fillStyle = '#5a4a3a';
+    ctx.font = 'bold 48px Playfair Display, serif';
+    ctx.textAlign = 'center';
+    ctx.fillText("Reese's", canvas.width / 2, 80);
+    
+    // Main text
+    ctx.font = 'bold 48px Playfair Display, serif';
+    ctx.fillText("Peanut Butter Cup", canvas.width / 2, 140);
+    
+    // Subtitle
+    ctx.font = 'bold 48px Playfair Display, serif';
+    ctx.fillText("Cake", canvas.width / 2, 195);
+    
+    // Small decorative elements
+    ctx.fillStyle = '#d4af37';
+    ctx.font = 'bold 24px serif';
+    ctx.fillText("★", 80, 220);
+    ctx.fillText("★", canvas.width - 80, 220);
+    
+    // Create texture from canvas
+    const textTexture = new THREE.CanvasTexture(canvas);
+    textTexture.needsUpdate = true;
+    
+    // Card materials
+    const cardGeometry = new THREE.PlaneGeometry(1.2, 0.6);
+    const textMaterial = new THREE.MeshStandardMaterial({
+      map: textTexture,
+      roughness: 0.4,
+      metalness: 0.1
+    });
+    const blankMaterial = new THREE.MeshStandardMaterial({
+      color: 0xfffffa,
+      roughness: 0.4,
+      metalness: 0.1
+    });
+    
+    // Front half (with text) - angled DOWN toward camera from top fold
+    const cardFront = new THREE.Mesh(cardGeometry, textMaterial);
+    cardFront.rotation.x = -Math.PI / 6; // Tilt down toward camera 30 degrees
+    cardFront.position.z = 0.15; // Move toward camera
+    cardFront.position.y = -0.15; // Move down from fold
+    cardFront.castShadow = true;
+    cardFront.receiveShadow = true;
+    cardGroup.add(cardFront);
+    
+    // Back half (blank) - angled DOWN away from camera from top fold
+    const cardBack = new THREE.Mesh(cardGeometry, blankMaterial);
+    cardBack.rotation.x = Math.PI / 6; // Tilt down away from camera 30 degrees
+    cardBack.position.z = -0.15; // Move away from camera
+    cardBack.position.y = -0.15; // Move down from fold
+    cardBack.castShadow = true;
+    cardBack.receiveShadow = true;
+    cardGroup.add(cardBack);
+    
+    // Position the card in front of the cake on the table - raise it up so fold is at top
+    cardGroup.position.set(0, 0.3, 2.8);
+    scene.add(cardGroup);
+
+    // Candles
+    const candleData = [];
+    const candlePositions = [
+    {x:-0.8,z:0.6},{x:0.8,z:0.6},{x:-0.8,z:-0.6},{x:0.8,z:-0.6},{x:0,z:0.9}
+    ];
+    const candleColors = [0xff6b9d,0x4ecdc4,0xffe66d,0x95e1d3,0xf38181];
+    candlePositions.forEach((pos,i)=>{
+    const candleGroup = new THREE.Group();
+    const candle = new THREE.Mesh(new THREE.CylinderGeometry(0.055,0.065,0.7,16),
+                                    new THREE.MeshStandardMaterial({color:candleColors[i], roughness:0.5, metalness:0.2}));
+    candle.castShadow = true;
+    candleGroup.add(candle);
+
+    for(let j=0;j<3;j++){
+        const stripe = new THREE.Mesh(new THREE.CylinderGeometry(0.057,0.067,0.08,16),
+                                    new THREE.MeshStandardMaterial({color:0xffffff, roughness:0.4}));
+        stripe.position.y = -0.25 + j*0.25;
+        candleGroup.add(stripe);
+    }
+
+    candleGroup.position.set(pos.x,1.8,pos.z);
+    scene.add(candleGroup);
+
+    const wick = new THREE.Mesh(new THREE.CylinderGeometry(0.012,0.012,0.12,8),
+                                new THREE.MeshStandardMaterial({color:0x1a1a1a}));
+    wick.position.set(pos.x,2.21,pos.z);
+    scene.add(wick);
+
+    const flame = new THREE.Mesh(new THREE.SphereGeometry(0.1,16,16), new THREE.MeshStandardMaterial({
+        color:0xffdd44, emissive:0xff8800, emissiveIntensity:3, transparent:true, opacity:0.95
+    }));
+    flame.scale.set(1,1.5,1);
+    flame.position.set(pos.x,2.32,pos.z);
+    scene.add(flame);
+
+    const flameLight = new THREE.PointLight(0xffaa44,1.2,3);
+    flameLight.position.set(pos.x,2.32,pos.z);
+    flameLight.castShadow = true;
+    scene.add(flameLight);
+
+    candleData.push({candleGroup, wick, flame, light: flameLight});
+    });
+
+    // Sparkles
+    const sparkleCount = 300;
+    const sparkleGeometry = new THREE.BufferGeometry();
+    const sparklePositions = new Float32Array(sparkleCount*3);
+    const sparkleVelocities = [];
+    for(let i=0;i<sparkleCount;i++){
+    const angle=Math.random()*Math.PI*2;
+    const radius=1+Math.random()*2;
+    sparklePositions[i*3]=Math.cos(angle)*radius;
+    sparklePositions[i*3+1]=Math.random()*3+0.5;
+    sparklePositions[i*3+2]=Math.sin(angle)*radius;
+    sparkleVelocities.push({x:(Math.random()-0.5)*0.01, y:Math.random()*0.02+0.01, z:(Math.random()-0.5)*0.01});
+    }
+    sparkleGeometry.setAttribute('position', new THREE.BufferAttribute(sparklePositions,3));
+    const sparkles = new THREE.Points(sparkleGeometry,new THREE.PointsMaterial({
+    color:0xffd700,size:0.08,transparent:true,opacity:0.8,blending:THREE.AdditiveBlending
+    }));
+    scene.add(sparkles);
+
+    // Balloons
+    const balloons=[];
+    const balloonColors=[0xf54278,0xf59b42,0xffee33,0x33ff63,0x33ccff];
+    const balloonPositions=[{x:-3,z:2},{x:3,z:2},{x:-2.5,z:-2},{x:2.5,z:-2},{x:0,z:-3}];
+    balloonPositions.forEach((pos,i)=>{
+    const balloonGeo=new THREE.SphereGeometry(0.4,16,16);
+    balloonGeo.scale(1,1.2,1);
+    const balloonMat=new THREE.MeshStandardMaterial({color:balloonColors[i%balloonColors.length],roughness:0.3});
+    const balloon=new THREE.Mesh(balloonGeo,balloonMat);
+    balloon.position.set(pos.x,3+Math.random(),pos.z);
+    balloon.castShadow=true;
+    scene.add(balloon);
+
+    const stringGeo=new THREE.CylinderGeometry(0.01,0.01,2,8);
+    const stringMat=new THREE.MeshBasicMaterial({color:0xffffff});
+    const stringMesh=new THREE.Mesh(stringGeo,stringMat);
+    stringMesh.position.set(pos.x,balloon.position.y-1.2,pos.z);
+    scene.add(stringMesh);
+
+    balloons.push({balloon,string:stringMesh,offset:i*0.5});
+    });
+
+    // Confetti
+    const confettiParticles=[];
+    const confettiColors=[0xff6b9d,0xff8c42,0xffd700,0x4ecdc4,0x95e1d3,0xaa96da,0xf38181,0xffe66d];
+    for(let i=0;i<50;i++){
+    const geo=new THREE.BoxGeometry(0.05,0.05,0.01);
+    const mat=new THREE.MeshStandardMaterial({color:confettiColors[Math.floor(Math.random()*confettiColors.length)]});
+    const mesh=new THREE.Mesh(geo,mat);
+    mesh.position.set((Math.random()-0.5)*6,Math.random()*4,(Math.random()-0.5)*6);
+    const velocity={x:(Math.random()-0.5)*0.01,y:-0.01-Math.random()*0.02,z:(Math.random()-0.5)*0.01};
+    const rotationSpeed={x:Math.random()*0.1,y:Math.random()*0.1,z:Math.random()*0.1};
+    confettiParticles.push({mesh,velocity,rotationSpeed});
+    scene.add(mesh);
+    }
+
+    // Clock
+    const clock = new THREE.Clock();
+
+    // UI
+    const autoRotateBtn = document.getElementById('autoRotateBtn');
+    const resetBtn = document.getElementById('resetBtn');
+
+    autoRotateBtn.addEventListener('click', ()=>{
+    controls.autoRotate = !controls.autoRotate;
+    autoRotateBtn.classList.toggle('active');
+    });
+    resetBtn.addEventListener('click', ()=>{
+    camera.position.set(0,2.5,8);
+    controls.target.set(0,1,0);
+    controls.autoRotate=false;
+    autoRotateBtn.classList.remove('active');
+    });
+
+    // Animate
+    function animate(){
+    requestAnimationFrame(animate);
+    const t = clock.getElapsedTime();
+
+    if(introActive){
+        camera.position.lerp(targetCameraPos,0.02);
+        camera.lookAt(0,1,0);
+    } else {
+        controls.update();
+    }
+
+    // Candle flames
+    candleData.forEach((data,i)=>{
+        const flicker = 0.85+0.15*Math.sin(t*12+i*2.5);
+        data.flame.scale.setScalar(flicker);
+        data.flame.position.y=2.32+Math.sin(t*5+i)*0.02;
+        data.light.intensity=1.0+flicker*0.4;
+    });
+
+    // Sparkles
+    const sp = sparkles.geometry.attributes.position.array;
+    for(let i=0;i<sparkleCount;i++){
+        sp[i*3]+=sparkleVelocities[i].x;
+        sp[i*3+1]+=sparkleVelocities[i].y;
+        sp[i*3+2]+=sparkleVelocities[i].z;
+        if(sp[i*3+1]>4){
+        sp[i*3+1]=0.5;
+        const angle=Math.random()*Math.PI*2;
+        const radius=1+Math.random()*2;
+        sp[i*3]=Math.cos(angle)*radius;
+        sp[i*3+2]=Math.sin(angle)*radius;
+        }
+    }
+    sparkles.geometry.attributes.position.needsUpdate=true;
+    sparkles.rotation.y=t*0.05;
+
+    // Confetti
+    confettiParticles.forEach(p=>{
+        p.mesh.position.x+=p.velocity.x;
+        p.mesh.position.y+=p.velocity.y;
+        p.mesh.position.z+=p.velocity.z;
+        p.mesh.rotation.x+=p.rotationSpeed.x;
+        p.mesh.rotation.y+=p.rotationSpeed.y;
+        p.mesh.rotation.z+=p.rotationSpeed.z;
+        if(p.mesh.position.y<-0.5){
+        p.mesh.position.y=4+Math.random()*2;
+        p.mesh.position.x=(Math.random()-0.5)*6;
+        p.mesh.position.z=(Math.random()-0.5)*6;
+        }
+    });
+
+    // Balloons
+    balloons.forEach(b=>{
+        b.balloon.position.y=3+Math.sin(t*0.5+b.offset)*0.3;
+        b.balloon.rotation.z=Math.sin(t*0.3+b.offset)*0.1;
+        b.string.position.y=b.balloon.position.y-1.2;
+        b.string.rotation.z=Math.sin(t*0.3+b.offset)*0.05;
+    });
+
+    renderer.render(scene,camera);
+    }
+    animate();
+
+    window.addEventListener('resize',()=>{
+    camera.aspect=window.innerWidth/window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth,window.innerHeight);
+    });
+    </script>
+
+</body>
+</html>
